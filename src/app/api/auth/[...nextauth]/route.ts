@@ -1,7 +1,16 @@
-import NextAuth from "next-auth";
+// This API route is deprecated as we've migrated from NextAuth to Supabase Auth
+import { NextResponse } from 'next/server';
 
-import { authOptions } from "@/shared/lib/authOptions";
+export async function GET() {
+    return NextResponse.json(
+        { message: 'Auth has been migrated to Supabase Auth. This endpoint is no longer active.' },
+        { status: 410 } // Gone status code
+    );
+}
 
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
+export async function POST() {
+    return NextResponse.json(
+        { message: 'Auth has been migrated to Supabase Auth. This endpoint is no longer active.' },
+        { status: 410 } // Gone status code
+    );
+}

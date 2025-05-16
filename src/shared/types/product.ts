@@ -1,4 +1,8 @@
-import { ProductSpec } from "@prisma/client";
+// Define ProductSpec type locally instead of importing from Prisma
+export type ProductSpec = {
+  specGroupID: string;
+  specValues: string[];
+};
 
 export type TUserReview = {
   userName: string;

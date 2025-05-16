@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { SupabaseAuthProvider } from "@/shared/hooks/useSupabaseAuth";
 
 const outfitFont = localFont({
   src: "../assets/fonts/Outfit-VariableFont.ttf",
@@ -19,7 +20,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={outfitFont.className}>{children}</body>
+      <body className={outfitFont.className}>
+        <SupabaseAuthProvider>{children}</SupabaseAuthProvider>
+      </body>
     </html>
   );
 }

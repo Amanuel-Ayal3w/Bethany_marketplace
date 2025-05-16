@@ -1,19 +1,35 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
 
 import AdminSidebar from "@/domains/admin/components/sideBar";
-import { authOptions } from "@/shared/lib/authOptions";
+import { getSupabaseServerClient } from "@/shared/lib/supabase-server";
 
 export const metadata: Metadata = {
   title: "Admin",
 };
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
-  const session = await getServerSession(authOptions);
+  // Get session from Supabase Auth
+  const supabase = getSupabaseServerClient();
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // If not logged in, redirect to login page
   if (!session) {
-    redirect("/");
+    redirect("/login");
   }
+
+  // You might want to add a role check here to make sure the user is an admin
+  // For example:
+  // const { data: profile } = await supabase
+  //   .from('Profile')
+  //   .select('role')
+  //   .eq('id', session.user.id)
+  //   .single();
+  // 
+  // if (!profile || profile.role !== 'ADMIN') {
+  //   redirect('/');
+  // }
+
   return (
     <div className="styles.adminLayout flex min-h-screen">
       <AdminSidebar />

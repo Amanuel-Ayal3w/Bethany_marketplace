@@ -1,4 +1,19 @@
-import { NameValue, OptionSetType, PageType } from "@prisma/client";
+// Define the types that were previously imported from Prisma
+export type NameValue = {
+  name: string;
+  value: string;
+};
+
+export enum OptionSetType {
+  TEXT = "TEXT",
+  COLOR = "COLOR"
+}
+
+export enum PageType {
+  MAIN = "MAIN",
+  LIST = "LIST",
+  PRODUCT = "PRODUCT"
+}
 
 export type TProductCard = {
   name: string;
