@@ -1,28 +1,38 @@
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
-import AuthTabs from '@/shared/components/Auth/AuthTabs';
+import LoginForm from '@/shared/components/Auth/LoginForm';
 import { getSupabaseServerClient } from '@/shared/lib/supabase-server';
 
 export const metadata: Metadata = {
-    title: 'Login | BITEX',
-    description: 'Login to your BITEX account',
+    title: 'Admin Login | BITEX',
+    description: 'Admin access for BITEX marketplace',
 };
 
-export default async function LoginPage() {
+export default async function LoginPage({
+    searchParams,
+}: {
+    searchParams: { [key: string]: string | string[] | undefined };
+}) {
+    // Get return URL if available
+    const returnUrl = typeof searchParams.returnUrl === 'string'
+        ? searchParams.returnUrl
+        : '/admin';
+
     // Check if user is already logged in
     const supabase = getSupabaseServerClient();
     const { data: { session } } = await supabase.auth.getSession();
 
-    // If already logged in, redirect to dashboard
+    // If already logged in, redirect to the return URL or admin dashboard
     if (session) {
-        redirect('/');
+        redirect(returnUrl);
     }
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center py-2">
             <div className="w-full max-w-md px-4">
-                <h1 className="text-2xl font-bold text-center mb-6">Welcome to BITEX</h1>
-                <AuthTabs />
+                <h1 className="text-2xl font-bold text-center mb-2">BITEX Admin</h1>
+                <p className="text-gray-600 text-center mb-6">Administrator access only</p>
+                <LoginForm returnUrl={returnUrl} />
             </div>
         </div>
     );

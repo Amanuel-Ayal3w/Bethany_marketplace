@@ -3,9 +3,11 @@ import { redirect } from "next/navigation";
 
 import AdminSidebar from "@/domains/admin/components/sideBar";
 import { getSupabaseServerClient } from "@/shared/lib/supabase-server";
+import { db } from "@/shared/lib/db";
 
 export const metadata: Metadata = {
-  title: "Admin",
+  title: " Admin Dashboard",
+  description: "Administrator control panel for BITEX marketplace"
 };
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
@@ -15,30 +17,49 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
 
   // If not logged in, redirect to login page
   if (!session) {
-    redirect("/login");
+    redirect("/login?returnUrl=/admin");
   }
 
-  // You might want to add a role check here to make sure the user is an admin
-  // For example:
-  // const { data: profile } = await supabase
-  //   .from('Profile')
-  //   .select('role')
-  //   .eq('id', session.user.id)
-  //   .single();
-  // 
-  // if (!profile || profile.role !== 'ADMIN') {
-  //   redirect('/');
-  // }
+  try {
+    // Get user profile to verify admin role
+    const profile = await db.profile.findUnique({
+      where: { id: session.user.id }
+    });
 
-  return (
-    <div className="styles.adminLayout flex min-h-screen">
-      <AdminSidebar />
-      <div className="w-full p-6">
-        <h1 className="w-full block text-gray-700 text-2xl font-light pb-5 mb-2 border-b border-gray-300">Page Name</h1>
-        {children}
+    console.log(`Admin layout profile check for ${session.user.email}:`, profile);
+
+    // Redirect non-admin users to home page
+    if (!profile || profile.role !== 'ADMIN') {
+      console.log(`User ${session.user.email} attempted to access admin but has role: ${profile?.role}`);
+      redirect('/');
+    }
+
+    // Get admin email for display
+    const adminEmail = session.user.email;
+
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        <AdminSidebar />
+        <div className="flex-1 flex flex-col">
+          <header className="bg-white shadow-sm border-b border-gray-200">
+            <div className="px-6 py-4 flex justify-between items-center">
+              <h1 className="text-xl font-semibold text-gray-800">BITEX Admin</h1>
+              <div className="text-sm text-gray-600">
+                Logged in as: <span className="font-medium">{adminEmail}</span>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex-1 p-6">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error("Error checking admin permissions:", error);
+    redirect("/login?error=permission");
+  }
 };
 
 export default AdminLayout;

@@ -24,7 +24,7 @@ async function checkTriggers() {
         if (publicTriggers.length === 0) {
             console.log('No triggers found in public schema');
         } else {
-            publicTriggers.forEach((trigger: any) => {
+            publicTriggers.forEach(trigger => {
                 console.log(`- ${trigger.trigger_name} (${trigger.event_manipulation})`);
             });
         }
@@ -36,7 +36,7 @@ async function checkTriggers() {
             FROM information_schema.schemata
         `;
 
-        schemas.forEach((schema: any) => {
+        schemas.forEach(schema => {
             console.log(`- ${schema.schema_name}`);
         });
 
@@ -52,7 +52,7 @@ async function checkTriggers() {
             if (authTriggers.length === 0) {
                 console.log('No triggers found in auth schema');
             } else {
-                authTriggers.forEach((trigger: any) => {
+                authTriggers.forEach(trigger => {
                     console.log(`- ${trigger.trigger_name} on ${trigger.event_object_table} (${trigger.event_manipulation})`);
                 });
             }
@@ -77,7 +77,7 @@ async function checkTriggers() {
             if (allTriggers.length === 0) {
                 console.log('No triggers found');
             } else {
-                allTriggers.forEach((trigger: any) => {
+                allTriggers.forEach(trigger => {
                     console.log(`- ${trigger.trigger_name} on ${trigger.schema_name}.${trigger.table_name}`);
                 });
             }

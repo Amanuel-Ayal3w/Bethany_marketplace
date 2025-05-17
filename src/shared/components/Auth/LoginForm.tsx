@@ -1,14 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSupabaseAuth } from '@/shared/hooks/useSupabaseAuth';
 
-export default function LoginForm() {
+interface LoginFormProps {
+    returnUrl?: string;
+}
+
+export default function LoginForm({ returnUrl = '/admin' }: LoginFormProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { signIn } = useSupabaseAuth();
+    const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,7 +23,8 @@ export default function LoginForm() {
 
         try {
             await signIn(email, password);
-            // No need to redirect as the middleware will handle this
+            // Explicitly redirect to the return URL after successful login
+            router.push(returnUrl);
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
@@ -30,8 +37,8 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        <div className="w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
+            <h2 className="text-xl font-bold mb-6 text-center">Administrator Login</h2>
 
             {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -42,7 +49,7 @@ export default function LoginForm() {
             <form onSubmit={handleLogin} className="space-y-6">
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        Email
+                        Admin Email
                     </label>
                     <input
                         id="email"
@@ -74,7 +81,7 @@ export default function LoginForm() {
                         disabled={isLoading}
                         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                     >
-                        {isLoading ? 'Signing in...' : 'Sign in'}
+                        {isLoading ? 'Signing in...' : 'Sign in to Admin'}
                     </button>
                 </div>
             </form>
