@@ -8,7 +8,24 @@ import { SlidesData } from "@/domains/store/homePage/constants/";
 import { ArrowIcon } from "@/shared/components/icons/svgIcons";
 import { cn } from "@/shared/utils/styling";
 
-export const HomeSlider = () => {
+// Define the type for slides
+type Slide = {
+  imgUrl: string;
+  url: string;
+  alt?: string;
+  msg?: {
+    title: string;
+    buttonText: string;
+    desc?: string;
+  };
+};
+
+type HomeSliderProps = {
+  slides?: Slide[];
+};
+
+export const HomeSlider = ({ slides }: HomeSliderProps) => {
+  const slideData = slides || SlidesData;
   const [activeSlideNum, setActiveSlideNum] = useState(0);
   const touchPos = {
     start: 0,
@@ -30,7 +47,7 @@ export const HomeSlider = () => {
     setActiveSlideNum((prev) => {
       if (newSlideNumber === prev) return prev;
 
-      const slideLastIndex = SlidesData.length - 1;
+      const slideLastIndex = slideData.length - 1;
       if (newSlideNumber > prev) {
         return activeSlideNum === slideLastIndex ? 0 : prev + 1;
       }
@@ -89,7 +106,7 @@ export const HomeSlider = () => {
         </button>
       </div>
       <div className="h-full rounded-xl overflow-hidden translate-z-0 top-0 left-0 select-none">
-        {SlidesData.map((slide, index) => (
+        {slideData.map((slide, index) => (
           <div
             onTouchStart={touchStart}
             onTouchMove={touchMove}
@@ -105,7 +122,7 @@ export const HomeSlider = () => {
           >
             <Image
               src={slide.imgUrl}
-              alt=""
+              alt={slide.alt || ""}
               fill
               className="hover:scale-105 object-cover transition-all duration-500"
               sizes="(max-width:1080px)"
@@ -148,7 +165,7 @@ export const HomeSlider = () => {
         ))}
       </div>
       <div className="absolute bottom-5 left-0 right-0 flex gap-4 sm:gap-6 justify-center items-center">
-        {SlidesData.map((_, index) => (
+        {slideData.map((_, index) => (
           <div
             onClick={() => handleSliding(index)}
             key={index}

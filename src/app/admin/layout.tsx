@@ -7,7 +7,7 @@ import { db } from "@/shared/lib/db";
 
 export const metadata: Metadata = {
   title: " Admin Dashboard",
-  description: "Administrator control panel for BITEX marketplace"
+  description: "Administrator control panel for Bethany Marketplace"
 };
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
@@ -43,7 +43,7 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
         <div className="flex-1 flex flex-col">
           <header className="bg-white shadow-sm border-b border-gray-200">
             <div className="px-6 py-4 flex justify-between items-center">
-              <h1 className="text-xl font-semibold text-gray-800">BITEX Admin</h1>
+              <h1 className="text-xl font-semibold text-gray-800">Bethany Marketplace Admin</h1>
               <div className="text-sm text-gray-600">
                 Logged in as: <span className="font-medium">{adminEmail}</span>
               </div>

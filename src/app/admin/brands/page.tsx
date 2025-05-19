@@ -93,18 +93,27 @@ const Brand = () => {
 
   return (
     <div>
-      <div className="flex gap-4 items-center">
-        <Input
-          type="text"
-          className="w-[200px]"
-          value={addValue}
-          onChange={(e) => setAddValue(e.currentTarget.value)}
-        />
-        <Button disabled={isLoading} onClick={handleAdd}>
-          Add New Brand
-        </Button>
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold mr-4">Brands</h1>
+          <div className="bg-yellow-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+            {brandList.length} Total
+          </div>
+        </div>
+        <div className="flex gap-4 items-center">
+          <Input
+            type="text"
+            className="w-[200px]"
+            value={addValue}
+            onChange={(e) => setAddValue(e.currentTarget.value)}
+            placeholder="Enter brand name"
+          />
+          <Button disabled={isLoading} onClick={handleAdd}>
+            Add New Brand
+          </Button>
+        </div>
       </div>
-      <div className="w-[500px] mt-10 text-sm text-gray-800">
+      <div className="w-full mt-10 text-sm text-gray-800">
         {isListLoading ? (
           <div>LOADING...</div>
         ) : (

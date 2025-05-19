@@ -48,13 +48,13 @@ const CartItem = ({ data, onLinkClicked }: TProps) => {
             {(quantity * currentPrice).toLocaleString("en-us", {
               minimumFractionDigits: 2,
             })}{" "}
-            €
+            ETB
           </span>
           <span className="text-sm text-gray-500 ml-3">
             {quantity > 1
               ? `${quantity} x ${currentPrice.toLocaleString("en-us", {
-                  maximumFractionDigits: 2,
-                })} €`
+                maximumFractionDigits: 2,
+              })} ETB`
               : ""}{" "}
           </span>
         </div>

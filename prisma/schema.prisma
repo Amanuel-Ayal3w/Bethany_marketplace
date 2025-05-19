@@ -14,11 +14,20 @@ model Category {
   parentID           String?
   name               String
   url                String
-  iconUrl            String?
-  iconSize           Int[]
   Category_Option    Category_OptionSet[]
   Category_SpecGroup Category_SpecGroup[]
   products           Product[]
+  featuredIn         FeaturedCategory[]
+}
+
+model FeaturedCategory {
+  id         String   @id @default(uuid())
+  categoryID String
+  position   Int      @default(999) // For ordering in the navbar
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  category   Category @relation(fields: [categoryID], references: [id], onDelete: Cascade)
 }
 
 model Category_OptionSet {
@@ -57,9 +66,9 @@ model SpecGroup {
 }
 
 model Product {
-  id              String      @id @default(uuid())
+  id              String           @id @default(uuid())
   name            String
-  isAvailable     Boolean     @default(true)
+  isAvailable     Boolean          @default(true)
   desc            String?
   specialFeatures String[]
   images          String[]
@@ -70,14 +79,16 @@ model Product {
   specs           Json
   brandID         String
   PageVisit       PageVisit[]
-  brand           Brand       @relation(fields: [brandID], references: [id])
-  category        Category    @relation(fields: [categoryID], references: [id])
+  brand           Brand            @relation(fields: [brandID], references: [id])
+  category        Category         @relation(fields: [categoryID], references: [id])
+  reviews         ProductReview[]
 }
 
 model Brand {
-  id       String    @id @default(uuid())
-  name     String    @unique
-  products Product[]
+  id              String         @id @default(uuid())
+  name            String         @unique
+  products        Product[]
+  HomepageBrand   HomepageBrand?
 }
 
 model PageVisit {
@@ -91,10 +102,11 @@ model PageVisit {
 }
 
 model Profile {
-  id        String   @id
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String           @id
+  role             UserRole         @default(USER)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  reviews          ProductReview[]
 }
 
 model Account {
@@ -139,4 +151,45 @@ enum PageType {
 enum UserRole {
   USER
   ADMIN
+}
+
+// New models for homepage management
+model FeaturedBanner {
+  id          String   @id @default(uuid())
+  title       String
+  smallTitle  String?
+  imagePath   String
+  url         String
+  position    Int      @default(999)
+  isActive    Boolean  @default(true)
+  bannerType  String   @default("wide") // wide, collection, etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HomepageBrand {
+  id        String   @id @default(uuid())
+  brandID   String   @unique
+  logoPath  String?
+  position  Int      @default(999)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  brand     Brand    @relation(fields: [brandID], references: [id], onDelete: Cascade)
+}
+
+// Model for product reviews
+model ProductReview {
+  id          String   @id @default(uuid())
+  productId   String
+  profileId   String
+  rating      Int      // 1-5 star rating
+  reviewText  String
+  isVerifiedPurchase Boolean @default(false)
+  isHelpful   Int      @default(0)  // Count of people who found this helpful
+  isNotHelpful Int     @default(0)  // Count of people who didn't find this helpful
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }

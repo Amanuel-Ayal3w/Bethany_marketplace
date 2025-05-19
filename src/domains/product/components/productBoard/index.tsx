@@ -1,52 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 
-import AddToCartButton from "@/domains/store/shoppingCard/components/addToCartButton";
-import Quantity from "@/domains/store/shoppingCard/components/quantity";
-import { StarIcon, HeartIcon } from "@/shared/components/icons/svgIcons";
 import { TProductBoard } from "@/shared/types/product";
-import { TCartItem } from "@/shared/types/shoppingCart";
+import Button from "@/shared/components/UI/button";
 
-const ProductBoard = ({ boardData }: { boardData: TProductBoard }) => {
+interface ProductBoardProps {
+  boardData: TProductBoard;
+}
+
+const ProductBoard = ({ boardData }: ProductBoardProps) => {
   const { name, id, isAvailable, specialFeatures, price, shortDesc, dealPrice, defaultQuantity } = boardData;
-  const [quantity, setQuantity] = useState(defaultQuantity > 1 ? defaultQuantity : 1);
 
-  const handleQuantityChange = (isReducing: boolean) => {
-    setQuantity((prev) => {
-      if (isReducing) {
-        return prev > 1 ? prev - 1 : 1;
-      }
-      return prev + 1;
-    });
-  };
-
-  const cartItemData: TCartItem = {
-    productId: id,
-    quantity: quantity,
-  };
   return (
     <div className="w-full relative flex flex-col">
-      <button className="absolute right-0 top-0 border-none p-1 bg-white">
-        <HeartIcon
-          width={22}
-          className="fill-white cursor-pointer transition-colors duration-300 stroke-1 stroke-gray-400 hover:fill-gray-300"
-        />
-      </button>
-      <section className="block w-full">
-        <div className="flex items-center gap-0.5">
-          <StarIcon width={15} stroke="#856B0F" fill="#FFD643" />
-          <StarIcon width={15} stroke="#856B0F" fill="#FFD643" />
-          <StarIcon width={15} stroke="#856B0F" fill="#FFD643" />
-          <StarIcon width={15} stroke="#856B0F" fill="#FFD643" />
-          <StarIcon width={15} stroke="#856B0F" fill="#FFD643" />
-          <Link href={"#"} className="ml-4 text-xs text-bitex-blue-300">
-            880 User Reviews
-          </Link>
-        </div>
-      </section>
-      <h1 className="block text-2xl leading-9 font-medium my-2.5 mt-8 text-gray-700">{name}</h1>
+      <h1 className="block text-2xl leading-9 font-medium mt-2 mb-2.5 text-gray-700">{name}</h1>
       <span className="block text-xs text-gray-700 mb-4">{shortDesc}</span>
       <hr className="w-full border-t border-gray-300 mb-5" />
       <div className="flex flex-col gap-3 text-sm text-gray-500 mb-12">
@@ -57,29 +25,32 @@ const ProductBoard = ({ boardData }: { boardData: TProductBoard }) => {
           minimumIntegerDigits: 2,
           minimumFractionDigits: 2,
         })}{" "}
-        €
+        ETB
       </h2>
 
       {dealPrice && (
         <div className="mb-5 text-sm">
-          <span className="text-white rounded-sm bg-bitex-red-500 px-3 py-1">
+          <span className="text-white rounded-sm bg-bethany-red-500 px-3 py-1">
             {`
             Save
             ${(price - dealPrice).toLocaleString("en-us", {
               minimumIntegerDigits: 2,
               minimumFractionDigits: 2,
-            })} €
+            })} ETB
             `}
           </span>
-          <span className="mt-[10px] block text-gray-800">Was {price} €</span>
+          <span className="mt-[10px] block text-gray-800">Was {price} ETB</span>
         </div>
       )}
       <hr className="w-full border-t border-gray-300 mb-5" />
 
-      {/* ----------------- ADD TO CART SECTION ----------------- */}
+      {/* ----------------- CONTACT US SECTION ----------------- */}
       <section className="flex items-center w-full">
-        <Quantity onChange={handleQuantityChange} quantity={quantity} />
-        <AddToCartButton cartItemData={cartItemData} disabled={!isAvailable} />
+        <Link href="/contact">
+          <Button className="flex justify-center items-center gap-5 cursor-pointer ml-6 sm:ml-10 text-sm sm:text-lg font-light px-8 sm:px-12 py-2.5 bg-bethany-blue-500 rounded-lg text-white transition-all duration-300 hover:bg-bethany-blue-600">
+            Contact Us
+          </Button>
+        </Link>
       </section>
     </div>
   );

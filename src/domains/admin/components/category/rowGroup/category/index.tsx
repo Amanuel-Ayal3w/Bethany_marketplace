@@ -25,9 +25,7 @@ type TProps = {
 const initialCategory: TAddCategory = {
   parentID: null,
   name: "",
-  url: "",
-  iconSize: [],
-  iconUrl: null,
+  url: ""
 };
 
 type TEditSubCat = {
@@ -76,7 +74,7 @@ const Category = ({ onReset, data, subCategories }: TProps) => {
       return;
     }
 
-    const updatedData: TUpdateCategory = { id: categoryID, iconSize: [] };
+    const updatedData: TUpdateCategory = { id: categoryID };
 
     if (editCategoryData.name !== categoryName) updatedData.name = editCategoryData.name;
     if (editCategoryData.url !== categoryUrl) updatedData.url = editCategoryData.url;
@@ -169,8 +167,7 @@ const Category = ({ onReset, data, subCategories }: TProps) => {
     }
 
     const updatedData: TUpdateCategory = {
-      id: selectedSubCategory.id,
-      iconSize: [],
+      id: selectedSubCategory.id
     };
     if (editSubCatData.name !== selectedSubCategory.name) updatedData.name = editSubCatData.name;
     if (editSubCatData.url !== selectedSubCategory.url) updatedData.url = editSubCatData.url;

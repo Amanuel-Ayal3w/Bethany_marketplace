@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { db } from '@/shared/lib/db';
 
 export const metadata: Metadata = {
-    title: 'Admin Profile | BITEX',
-    description: 'Manage your BITEX administrator profile',
+    title: 'Admin Profile | Bethany Marketplace',
+    description: 'Manage your Bethany Marketplace administrator profile',
 };
 
 export default async function ProfilePage() {
@@ -51,7 +51,7 @@ export default async function ProfilePage() {
                             <SignOutButton />
                         </div>
                         <p className="text-blue-100 mt-2">
-                            Manage your BITEX store admin account
+                            Manage your Bethany Marketplace admin account
                         </p>
                     </div>
 

@@ -3,8 +3,6 @@ export type TCategory = {
   parentID: string | null;
   name: string;
   url: string;
-  iconUrl: string | null;
-  iconSize: number[];
 };
 
 export type TGroupJSON = {
@@ -14,4 +12,19 @@ export type TGroupJSON = {
 type categoryJSON = {
   category: TCategory;
   subCategories: TCategory[];
+};
+
+export type TFeaturedCategory = {
+  id: string;
+  categoryID: string;
+  position: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  category?: TCategory;
+};
+
+export type TNavbarItem = {
+  name: string;
+  link: string;
 };

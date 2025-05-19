@@ -10,24 +10,18 @@ const GetAllCategories = z.object({
   parentID: z.string().min(6).nullable(),
   name: z.string().min(3),
   url: z.string().min(3),
-  iconSize: z.array(z.number().int()),
-  iconUrl: z.string().min(3).nullable(),
 });
 
 const AddCategory = z.object({
   parentID: z.string().min(6).nullable(),
   name: z.string().min(3),
   url: z.string().min(3),
-  iconSize: z.array(z.number().int()),
-  iconUrl: z.string().min(3).nullable(),
 });
 
 const UpdateCategory = z.object({
   id: z.string(),
   name: z.string().min(3).optional(),
   url: z.string().min(3).optional(),
-  iconSize: z.array(z.number().int()),
-  iconUrl: z.string().min(3).optional(),
 });
 
 export type TGetAllCategories = z.infer<typeof GetAllCategories>;
@@ -97,8 +91,6 @@ export const addCategory = async (data: TAddCategory) => {
         parentID: data.parentID,
         name: data.name,
         url: data.url,
-        iconSize: [...data.iconSize],
-        iconUrl: data.iconUrl,
       },
     });
     if (!result) return { error: "cant add to database" };
@@ -111,7 +103,7 @@ export const addCategory = async (data: TAddCategory) => {
 export const updateCategory = async (data: TUpdateCategory) => {
   if (!UpdateCategory.safeParse(data).success) return { error: "Data is no valid" };
 
-  const { id, iconSize, ...values } = data;
+  const { id, ...values } = data;
 
   try {
     const result = await db.category.update({
@@ -119,7 +111,6 @@ export const updateCategory = async (data: TUpdateCategory) => {
         id,
       },
       data: {
-        iconSize: [...iconSize],
         ...values,
       },
     });

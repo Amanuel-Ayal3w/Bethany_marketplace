@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+// Making Prisma work with Next.js with hot-reloading
 declare global {
   //eslint-disable-next-line
   var prisma: PrismaClient | undefined;

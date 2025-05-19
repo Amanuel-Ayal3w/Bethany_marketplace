@@ -7,8 +7,6 @@ const db_client = new PrismaClient();
 type MainCategory = {
     name: string;
     url: string;
-    iconUrl: string;
-    iconSize: [number, number];
 };
 
 type SubCategory = {
@@ -33,26 +31,18 @@ const MAIN_CATEGORIES: MainCategory[] = [
     {
         name: "Electronics",
         url: "electronics",
-        iconUrl: "/icons/electronics.svg",
-        iconSize: [24, 24],
     },
     {
         name: "Computers",
         url: "computers",
-        iconUrl: "/icons/computer.svg",
-        iconSize: [24, 24],
     },
     {
         name: "Mobile",
         url: "mobile",
-        iconUrl: "/icons/smartphone.svg",
-        iconSize: [24, 24],
     },
     {
         name: "Home Appliances",
         url: "home-appliances",
-        iconUrl: "/icons/appliance.svg",
-        iconSize: [24, 24],
     }
 ];
 
@@ -112,8 +102,6 @@ async function seedCategories() {
                 data: {
                     name: category.name,
                     url: category.url,
-                    iconUrl: category.iconUrl,
-                    iconSize: category.iconSize,
                     parentID: null
                 }
             });
@@ -132,8 +120,6 @@ async function seedCategories() {
                     data: {
                         name: subCategory.name,
                         url: subCategory.url,
-                        iconUrl: null,
-                        iconSize: [16, 16],
                         parentID: parentID
                     }
                 });
@@ -152,8 +138,6 @@ async function seedCategories() {
                         data: {
                             name: thirdCategory.name,
                             url: thirdCategory.url,
-                            iconUrl: null,
-                            iconSize: [12, 12],
                             parentID: parentID
                         }
                     });

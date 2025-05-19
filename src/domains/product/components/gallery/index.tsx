@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import SafeImage from "@/shared/components/UI/safeImage";
 
 import { CloseIcon } from "@/shared/components/icons/svgIcons";
 import { SK_Box } from "@/shared/components/UI/skeleton";
@@ -14,13 +14,18 @@ type TProps = {
 const Gallery = ({ images }: TProps) => {
   const [showZoom, setShowZoom] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  // Check if images array is valid
+  const hasValidImages = Array.isArray(images) && images.length > 0 &&
+    images.every(img => img && typeof img === 'string');
+
   return (
     <div className="flex">
       <div className="flex relative flex-col gap-4 mr-4">
-        {images ? (
+        {hasValidImages ? (
           images.map((image, index) => (
-            <Image
-              src={process.env.IMG_URL + image}
+            <SafeImage
+              src={image}
               alt=""
               width={64}
               height={64}
@@ -41,9 +46,9 @@ const Gallery = ({ images }: TProps) => {
         )}
       </div>
       <div className={"relative w-full h-[300px] sm:h-[540px]"}>
-        {images ? (
-          <Image
-            src={process.env.IMG_URL + images[selectedIndex]}
+        {hasValidImages ? (
+          <SafeImage
+            src={images[selectedIndex]}
             alt=""
             fill
             className="cursor-zoom-in object-contain rounded-xl border border-white transition-colors duration-300 hover:border-gray-300"
@@ -54,7 +59,7 @@ const Gallery = ({ images }: TProps) => {
           <SK_Box width="90%" height="90%" />
         )}
       </div>
-      {images && showZoom && (
+      {hasValidImages && showZoom && (
         <div className={"fixed inset-0 z-[19] flex justify-between items-center flex-col pt-5 pb-10"}>
           <div
             className={"absolute inset-0 backdrop-blur-[5px] bg-[rgba(0,0,0,0.6)]"}
@@ -67,8 +72,8 @@ const Gallery = ({ images }: TProps) => {
             >
               <CloseIcon width={16} />
             </button>
-            <Image
-              src={process.env.IMG_URL + images[selectedIndex]}
+            <SafeImage
+              src={images[selectedIndex]}
               className="object-contain"
               alt=""
               fill
@@ -81,8 +86,8 @@ const Gallery = ({ images }: TProps) => {
             }
           >
             {images.map((image, index) => (
-              <Image
-                src={process.env.IMG_URL + image}
+              <SafeImage
+                src={image}
                 alt=""
                 width={64}
                 height={64}

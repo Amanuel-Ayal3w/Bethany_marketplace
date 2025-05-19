@@ -27,9 +27,7 @@ type TProps = {
 const initialCategory: TAddCategory = {
   name: "",
   url: "",
-  parentID: null,
-  iconSize: [],
-  iconUrl: null,
+  parentID: null
 };
 
 const RowCatGroup = ({ data, categories, onReset }: TProps) => {
@@ -40,12 +38,18 @@ const RowCatGroup = ({ data, categories, onReset }: TProps) => {
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [groupCategoryData, setGroupCategoryData] = useState<TGetAllCategories>(data);
-  const [addCategoryData, setAddCategoryData] = useState<TAddCategory>(initialCategory);
+  const [groupCategoryData, setGroupCategoryData] = useState<TGetAllCategories>({
+    ...data,
+  });
+  const [addCategoryData, setAddCategoryData] = useState<TAddCategory>({
+    parentID: groupId,
+    name: "",
+    url: "",
+  });
 
   // ---------------------- FUNCTIONS ----------------------
   const handleUpdateGroup = async () => {
-    const updatedData: TUpdateCategory = { id: groupId, iconSize: [10, 10] };
+    const updatedData: TUpdateCategory = { id: groupId };
 
     if (groupCategoryData.name !== data.name) {
       updatedData.name = groupCategoryData.name;
@@ -55,14 +59,11 @@ const RowCatGroup = ({ data, categories, onReset }: TProps) => {
       updatedData.url = groupCategoryData.url;
     }
 
-    if (groupCategoryData.iconUrl && groupCategoryData.iconUrl !== data.iconUrl) {
-      updatedData.iconUrl = groupCategoryData.iconUrl;
+    if (!updatedData.name && !updatedData.url) {
+      setShowEdit(false);
+      return;
     }
 
-    if (groupCategoryData.iconSize && data.iconSize) {
-      if (groupCategoryData.iconSize.toString() !== data.iconSize.toString())
-        updatedData.iconSize = [...groupCategoryData.iconSize];
-    }
     setIsLoading(true);
     const response = await updateCategory(updatedData);
     if (!response.error) {
@@ -104,8 +105,6 @@ const RowCatGroup = ({ data, categories, onReset }: TProps) => {
 
     const data: TAddCategory = {
       parentID: groupId,
-      iconSize: [],
-      iconUrl: null,
       name: addCategoryData.name,
       url: addCategoryData.url,
     };
@@ -119,7 +118,9 @@ const RowCatGroup = ({ data, categories, onReset }: TProps) => {
     }
     if (result.res) {
       setAddCategoryData({
-        ...initialCategory,
+        parentID: groupId,
+        name: "",
+        url: "",
       });
       setErrorMsg("");
       setIsLoading(false);

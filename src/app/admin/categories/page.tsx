@@ -33,9 +33,25 @@ const AdminCategories = () => {
   }
   return (
     <div className="flex flex-col">
-      <div className="w-full mt-3 flex gap-4 items-center">
-        <h3 className="text-xl font-light text-gray-600">Add a main group:</h3>
-        <AddCategoryGroup onReset={getData} />
+      <div className="w-full mt-3 flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold">Categories</h1>
+          <div className="flex gap-3">
+            <div className="bg-red-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+              {allCategories.length} Total
+            </div>
+            <div className="bg-gray-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+              {groups.length} Groups
+            </div>
+            <div className="bg-gray-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+              {categories.length} Subcategories
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-4 items-center">
+          <h3 className="text-sm font-light text-gray-600">Add a main group:</h3>
+          <AddCategoryGroup onReset={getData} />
+        </div>
       </div>
       <div className="mt-6">
         {groups.length > 0 &&

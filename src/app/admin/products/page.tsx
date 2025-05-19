@@ -46,12 +46,19 @@ const AdminProducts = () => {
     if (result.res) {
       setIsLoading(false);
       setShowProductWindow(false);
+      getProductsList();
     }
   };
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center h-20 mb-8">
+      <div className="flex justify-between items-center h-20 mb-8">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold mr-4">Products</h1>
+          <div className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+            {productsList.length} Total
+          </div>
+        </div>
         <Button onClick={() => setShowProductWindow(true)}>Add new product</Button>
       </div>
       <div className="flex flex-col text-sm text-gray-800">

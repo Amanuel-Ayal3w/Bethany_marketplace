@@ -4,8 +4,8 @@ import LoginForm from '@/shared/components/Auth/LoginForm';
 import { getSupabaseServerClient } from '@/shared/lib/supabase-server';
 
 export const metadata: Metadata = {
-    title: 'Admin Login | BITEX',
-    description: 'Admin access for BITEX marketplace',
+    title: 'Admin Login | Bethany Marketplace',
+    description: 'Admin access for Bethany Marketplace',
 };
 
 export default async function LoginPage({
@@ -30,7 +30,7 @@ export default async function LoginPage({
     return (
         <div className="flex min-h-screen flex-col items-center justify-center py-2">
             <div className="w-full max-w-md px-4">
-                <h1 className="text-2xl font-bold text-center mb-2">BITEX Admin</h1>
+                <h1 className="text-2xl font-bold text-center mb-2">Bethany Marketplace Admin</h1>
                 <p className="text-gray-600 text-center mb-6">Administrator access only</p>
                 <LoginForm returnUrl={returnUrl} />
             </div>

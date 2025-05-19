@@ -45,8 +45,8 @@ const TodayDealCard = ({ productName, newPrice, oldPrice, image, dealEndTime, sp
           className="object-contain transition-all duration-400 ease-out opacity-0 scale-[0.9]"
         />
       </Link>
-      <div className="absolute top-5 left-5 rounded-md px-2 py-1 bg-bitex-red-500 text-sm text-white">
-        <span>Save {saveAmount.toLocaleString("en-us", { minimumFractionDigits: 2 })} €</span>
+      <div className="absolute top-5 left-5 rounded-md px-2 py-1 bg-bethany-red-500 text-sm text-white">
+        <span>Save {saveAmount.toLocaleString("en-us", { minimumFractionDigits: 2 })} ETB</span>
       </div>
       <Link href={url}>
         <h3 className="mt-3.5 mb-3 ml-2 text-gray-600">{productName}</h3>
@@ -67,14 +67,14 @@ const TodayDealCard = ({ productName, newPrice, oldPrice, image, dealEndTime, sp
               useGrouping: true,
               minimumFractionDigits: 2,
             })}{" "}
-            €
+            ETB
           </span>
           <span className="block text-lg font-medium text-gray-900">
             {newPrice.toLocaleString("en-us", {
               useGrouping: true,
               minimumFractionDigits: 2,
             })}{" "}
-            €
+            ETB
           </span>
         </section>
         <section className="text-center text-red-600 flex items-center flex-col gap-1.5">

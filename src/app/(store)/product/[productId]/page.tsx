@@ -5,36 +5,101 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { getOneProduct } from "@/actions/product/product";
+import { getOneProduct, getSimilarProducts } from "@/actions/product/product";
 import Gallery from "@/domains/product/components/gallery";
 import ProductBoard from "@/domains/product/components/productBoard";
 import ProductCard from "@/domains/product/components/productCard";
-import { TopProducts } from "@/domains/product/constants";
-import { LikeIcon, MinusIcon } from "@/shared/components/icons/svgIcons";
+import { MinusIcon } from "@/shared/components/icons/svgIcons";
 import { SK_Box } from "@/shared/components/UI/skeleton";
+import { getImageUrl } from "@/shared/constants/store";
 import { TProductPageInfo } from "@/shared/types/product";
 
 const ProductPage = () => {
   const router = useRouter();
-  const { productId } = useParams<{ productId: string[] }>();
+  const params = useParams();
+  const productId = params?.productId;
+
   const [productInfo, setProductInfo] = useState<TProductPageInfo | null | undefined>(null);
-  if (!productId) router.push("/");
+  const [similarProducts, setSimilarProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const getProductFromDB = async () => {
-      const response = await getOneProduct(productId.toString());
-      if (response.error) router.push("/");
-      setProductInfo(response.res);
+      if (!productId) {
+        setError("Invalid product ID");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await getOneProduct(Array.isArray(productId) ? productId[0] : productId.toString());
+
+        if (response.error) {
+          setError(response.error);
+          setIsLoading(false);
+          return;
+        }
+
+        setProductInfo(response.res);
+
+        // Fetch similar products once we have the current product
+        const similarProductsResponse = await getSimilarProducts(Array.isArray(productId) ? productId[0] : productId.toString());
+        if (similarProductsResponse.res && Array.isArray(similarProductsResponse.res)) {
+          setSimilarProducts(similarProductsResponse.res);
+        }
+
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching product:", err);
+        setError("Failed to load product information");
+        setIsLoading(false);
+      }
     };
+
     getProductFromDB();
   }, [productId, router]);
 
-  if (productInfo === undefined) return "";
+  if (isLoading) {
+    return (
+      <div className="storeContainer">
+        <div className="w-full h-auto mt-[100px] flex flex-col">
+          <div className="w-full flex flex-col lg:flex-row gap-12">
+            <div className="flex-grow">
+              <SK_Box width="60%" height="15px" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || productInfo === undefined) {
+    return (
+      <div className="storeContainer">
+        <div className="w-full h-auto mt-[100px] flex flex-col items-center justify-center">
+          <h2 className="text-xl text-red-600 mb-4">Product not found</h2>
+          <p className="text-gray-600 mb-6">{error || "The product you're looking for is not available."}</p>
+          <Link href="/" className="px-6 py-2 bg-black text-white rounded-md hover:bg-gray-800">
+            Back to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   let fullPath = "";
+
+  // Format the images to include the base URL and ensure proper paths
+  const formattedImages = productInfo?.images
+    ? productInfo.images
+      .filter((img): img is string => img !== undefined && img !== null)
+      .map(img => getImageUrl(img))
+    : undefined;
 
   return (
     <div className="storeContainer">
-      <div className="w-full h-auto mt-[160px] flex flex-col">
+      <div className="w-full h-auto mt-[100px] flex flex-col">
         <div className="w-full flex flex-col lg:flex-row gap-12">
           <div className="flex-grow">
             <div className="block text-gray-700 w-full mb-10 text-sm">
@@ -43,7 +108,7 @@ const ProductPage = () => {
                   <Link href={"/"} className="hover:font-medium after:mx-1 after:content-['/'] hover:text-gray-800">
                     Home
                   </Link>
-                  {productInfo.path.map((item, index) => {
+                  {productInfo.path && productInfo.path.map((item, index) => {
                     fullPath += "/" + item.url;
                     return (
                       <Link
@@ -60,20 +125,20 @@ const ProductPage = () => {
                 <SK_Box width="60%" height="15px" />
               )}
             </div>
-            <Gallery images={productInfo?.images} />
+            <Gallery images={formattedImages} />
           </div>
           <div className="lg:w-[512px] w-full">
             {productInfo ? (
               <ProductBoard
                 boardData={{
-                  id: productInfo.id,
-                  isAvailable: productInfo.isAvailable,
+                  id: productInfo?.id || "",
+                  isAvailable: productInfo?.isAvailable || false,
                   defaultQuantity: 1,
-                  name: productInfo.name,
-                  price: productInfo.price,
-                  dealPrice: productInfo.salePrice || undefined,
-                  shortDesc: productInfo.desc || "",
-                  specialFeatures: productInfo.specialFeatures,
+                  name: productInfo?.name || "",
+                  price: productInfo?.price || 0,
+                  dealPrice: productInfo?.salePrice || undefined,
+                  shortDesc: productInfo?.desc || "",
+                  specialFeatures: productInfo?.specialFeatures || [],
                 }}
               />
             ) : (
@@ -153,68 +218,35 @@ const ProductPage = () => {
                 </>
               )}
             </div>
-
-            {/* ----------------- USER REVIEWS ----------------- */}
-            <div className="flex flex-col w-full h-auto">
-              <div className="flex justify-between items-center pb-4 border-b border-gray-300">
-                <h2 className="font-light block text-2xl text-gray-900">User Reviews</h2>
-                <button className="text-sm text-gray-900 px-6 py-1.5 rounded-md bg-gray-100 border border-gray-700 hover:bg-gray-200 active:bg-light-300">
-                  New Review
-                </button>
-              </div>
-              <div className="flex flex-col w-full">
-                <div className="flex items-center flex-wrap w-full mt-5 text-sm">
-                  <div className="flex h-8 items-center text-gray-800 font-medium">
-                    <Image
-                      src={"/images/images/defaultUser.png"}
-                      className="rounded-full overflow-hidden mr-3"
-                      alt=""
-                      width={32}
-                      height={32}
-                    />
-                    <span>T. Mihai</span>
-                  </div>
-                  <span className="text-[#f97a1f] ml-8 font-medium">Verified Purchase</span>
-                  <div>
-                    <div className="inline-block ml-8 pl-6 bg-[url('/icons/dateIcon.svg')] bg-no-repeat bg-[position:left_center]">
-                      30 November 2023
-                    </div>
-                    <div className="ml-10 inline-block">
-                      <button className="h-8 mr-3 font-medium px-3 bg-white border border-white rounded-md text-gray-900 hover:border-green-600 hover:bg-green-800 hover:[&>svg]:fill-green-700 active:border-green-500 active:[&>svg]:fill-green-600">
-                        <LikeIcon width={16} className="fill-white stroke-gray-1000 mr-2" />0
-                      </button>
-                      <button className="h-8 mr-3 font-medium px-3 bg-white border border-white rounded-md text-gray-900 hover:border-red-700 hover:bg-[rgba(220,38,38,0.4)] hover:[&>svg]:fill-red-800 active:border-red-500 active:[&>svg]:fill-red-700 [&>svg]:inline-block [&>svg]:[-scale-x-100] [&>svg]:rotate-180 [&>svg]:-translate-y-[3px]">
-                        <LikeIcon width={16} className="fill-white stroke-gray-1000 mr-2" /> 0
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="my-4 ml-12 text-sm leading-5 text-gary-900">
-                  <span>
-                    {`Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Temporibus suscipit debitis reiciendis repellendus! Repellat rem beatae quo quis 
-                    tenetur. Culpa quae ratione delectus id odit in nesciunt saepe pariatur vitae.`}
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
+
+        {/* ----------------- SIMILAR PRODUCTS SECTION ----------------- */}
         <div className="w-full my-[100px]">
-          <h2 className="font-light block text-2xl text-gray-900">Similar Products</h2>
+          <h2 className="font-light block text-2xl text-gray-900 mb-4">Similar Products</h2>
           <div className="flex justify-between gap-3.5 w-full overflow-x-scroll pb-2">
-            {TopProducts.map((product, index) => (
-              <ProductCard
-                key={index}
-                imgUrl={product.imgUrl}
-                name={product.name}
-                price={product.price}
-                specs={product.specs}
-                url={product.url}
-                dealPrice={product.dealPrice}
-                staticWidth
-              />
-            ))}
+            {similarProducts.length > 0 ? (
+              similarProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  imgUrl={[
+                    product.images && product.images.length > 0 ? getImageUrl(product.images[0]) : '',
+                    product.images && product.images.length > 1 ? getImageUrl(product.images[1]) : (
+                      product.images && product.images.length > 0 ? getImageUrl(product.images[0]) : ''
+                    )
+                  ]}
+                  name={product.name}
+                  price={product.price}
+                  specs={product.specialFeatures || []}
+                  url={`/product/${product.id}`}
+                  dealPrice={product.salePrice}
+                  staticWidth
+                  isAvailable={product.isAvailable}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500 py-4">No similar products found</p>
+            )}
           </div>
         </div>
       </div>

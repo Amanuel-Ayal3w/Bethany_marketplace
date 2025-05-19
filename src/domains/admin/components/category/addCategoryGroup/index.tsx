@@ -17,30 +17,20 @@ const AddCategoryGroup = ({ onReset }: TProps) => {
     id: "",
     parentID: null,
     name: "",
-    url: "",
-    iconSize: [10, 10],
-    iconUrl: "",
+    url: ""
   };
   const [errorMsg, setErrorMsg] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [groupCategoryData, setGroupCategory] = useState<TGetAllCategories>(defaultGroupData);
 
   const handleAddGroup = async () => {
-    const { name, url, iconUrl, iconSize } = groupCategoryData;
-    if (!name || !url || !iconUrl || !iconSize) {
+    const { name, url } = groupCategoryData;
+    if (!name || !url) {
       setErrorMsg("All fields are required!");
       return;
     }
     if (name === "") {
       setErrorMsg("Name is empty!");
-      return;
-    }
-    if (iconSize[0] === 0 || iconSize[1] === 0) {
-      setErrorMsg("Icon Size is empty!");
-      return;
-    }
-    if (iconUrl === "") {
-      setErrorMsg("Icon Url is empty!");
       return;
     }
     if (url === "") {

@@ -1,0 +1,8 @@
+<svg width="200" height="40" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .brand-name { fill: #334155; font-family: Arial, sans-serif; font-weight: bold; }
+    .highlight { fill: #3385ff; }
+  </style>
+  <text x="5" y="28" class="brand-name" font-size="22">BETHANY</text>
+  <text x="100" y="28" class="highlight" font-size="22">MARKETPLACE</text>
+</svg> 

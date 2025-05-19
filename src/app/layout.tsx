@@ -9,8 +9,8 @@ const outfitFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "BITEX",
-  description: "Electronic Shop",
+  title: "Bethany Marketplace",
+  description: "Product Information Hub",
 };
 
 export default function RootLayout({

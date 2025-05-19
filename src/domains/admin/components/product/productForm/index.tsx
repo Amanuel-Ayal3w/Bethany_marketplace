@@ -1,6 +1,7 @@
 "use client";
 
-import { ProductSpec, SpecGroup } from "@prisma/client";
+import { SpecGroup } from "@prisma/client";
+import { ProductSpec } from "@/shared/types/product";
 import { useEffect, useState } from "react";
 
 import { getAllBrands } from "@/actions/brands/brands";
@@ -14,6 +15,7 @@ import { TGroupJSON } from "@/shared/types/categories";
 import { TAddProductFormValues } from "@/shared/types/product";
 import { TDropDown } from "@/shared/types/uiElements";
 import { cn } from "@/shared/utils/styling";
+import ImageUploader from "../imageUploader";
 
 const categoryListFirstItem: TDropDown = {
   text: "Select A Category....",
@@ -202,7 +204,7 @@ const ProductForm = ({ formValues: props, onChange }: TProps) => {
                 price: e.currentTarget.value,
               })
             }
-            placeholder="0.00€"
+            placeholder="0.00 ETB"
           />
         </div>
         <div className="flex items-center justify-between">
@@ -217,7 +219,7 @@ const ProductForm = ({ formValues: props, onChange }: TProps) => {
                 salePrice: e.currentTarget.value,
               })
             }
-            placeholder="0.00€"
+            placeholder="0.00 ETB"
           />
         </div>
         <div className="flex items-center justify-between">
@@ -256,37 +258,14 @@ const ProductForm = ({ formValues: props, onChange }: TProps) => {
             onChange={handleBrandChange}
           />
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between">
           <span>Images:</span>
-          <div className="flex flex-col gap-2 mr-6 w-[200px] justify-between">
-            {props.images.map((img, index) => (
-              <Input
-                key={index}
-                type="text"
-                value={img}
-                onChange={(e) => {
-                  props.images[index] = e.currentTarget.value;
-                  onChange({ ...props });
-                }}
-              />
-            ))}
+          <div className="w-[500px]">
+            <ImageUploader
+              images={props.images}
+              onChange={(newImages) => onChange({ ...props, images: newImages })}
+            />
           </div>
-          <Button
-            onClick={() => {
-              props.images.push("");
-              onChange({ ...props });
-            }}
-          >
-            +
-          </Button>
-          <Button
-            onClick={() => {
-              props.images.pop();
-              onChange({ ...props });
-            }}
-          >
-            -
-          </Button>
         </div>
         <div className="flex items-center justify-between">
           <span>Category</span>

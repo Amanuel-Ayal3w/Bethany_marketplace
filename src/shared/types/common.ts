@@ -55,8 +55,6 @@ type TSubCategory = {
 
 export type TCategory = {
   name: string;
-  iconUrl: string;
-  iconSize: [number, number];
   url: string;
   subCategories?: TSubCategory[];
 };

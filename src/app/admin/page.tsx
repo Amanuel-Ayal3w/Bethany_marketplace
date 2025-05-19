@@ -1,37 +1,60 @@
 import Link from "next/link";
-import { getSupabaseServerClient } from "@/shared/lib/supabase-server";
+import { db } from "@/shared/lib/db";
+import { StarIcon, ArrowIcon, ListIcon } from "@/shared/components/icons/svgIcons";
 
 export const metadata = {
-  title: "Admin Dashboard | BITEX",
-  description: "Administrator dashboard for the BITEX marketplace"
+  title: "Admin Dashboard | Bethany Marketplace",
+  description: "Administrator dashboard for the Bethany Marketplace"
 };
 
+// Custom icon components for admin dashboard
+const BagIcon = ({ width = 12, className = "" }) => (
+  <svg width={width} height={width} viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 8H18C20.2091 8 22 9.79086 22 12V18C22 20.2091 20.2091 22 18 22H6C3.79086 22 2 20.2091 2 18V12C2 9.79086 3.79086 8 6 8H8M16 8V6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6V8M16 8H8"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const CategoryIcon = ({ width = 12, className = "" }) => (
+  <svg width={width} height={width} viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 3H3V10H10V3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M21 3H14V10H21V3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M21 14H14V21H21V14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10 14H3V21H10V14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const BrandIcon = ({ width = 12, className = "" }) => (
+  <svg width={width} height={width} viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 4H18V6H20V8H18V10H16V8H14V6H16V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M3 18V14H6V10.5C6 10.5 6 6 12 6V14L9 14V18H3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M21 18H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const CircleRightIcon = ({ width = 8, className = "" }) => (
+  <svg width={width} height={width} viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 const AdminHome = async () => {
-  const supabase = getSupabaseServerClient();
-
-  // Get some basic stats
-  const { count: productsCount } = await supabase
-    .from('Product')
-    .select('*', { count: 'exact', head: true });
-
-  const { count: categoriesCount } = await supabase
-    .from('Category')
-    .select('*', { count: 'exact', head: true });
-
-  const { count: brandsCount } = await supabase
-    .from('Brand')
-    .select('*', { count: 'exact', head: true });
+  // Get counts directly from Prisma
+  const productsCount = await db.product.count();
+  const categoriesCount = await db.category.count();
+  const brandsCount = await db.brand.count();
 
   // Get latest page visits
-  const { data: recentVisits } = await supabase
-    .from('PageVisit')
-    .select('*')
-    .order('time', { ascending: false })
-    .limit(5);
+  const recentVisits = await db.pageVisit.findMany({
+    take: 5,
+    orderBy: {
+      time: 'desc'
+    }
+  });
 
-  const formatDate = (dateString: string | null) => {
+  const formatDate = (dateString: Date | null) => {
     if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleString();
+    return dateString.toLocaleString();
   };
 
   return (
@@ -40,26 +63,62 @@ const AdminHome = async () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Dashboard cards */}
-        <DashboardCard
-          title="Products"
-          value={productsCount || 0}
-          icon="📦"
-          linkTo="/admin/products"
-        />
+        <div className="p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
+          <Link href="/admin/products">
+            <div className="flex justify-between items-center">
+              <div className="flex">
+                <div className="bg-blue-600 w-10 h-10 min-w-10 rounded-md mr-3 flex items-center justify-center">
+                  <BagIcon width={16} className="stroke-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-normal text-blue-900 tracking-wide">Products</h2>
+                  <p className="text-2xl font-bold text-blue-600 mt-1">{productsCount}</p>
+                </div>
+              </div>
+              <div className="size-7 rounded-md bg-gray-100 flex items-center justify-center">
+                <CircleRightIcon width={8} className="stroke-gray-800" />
+              </div>
+            </div>
+          </Link>
+        </div>
 
-        <DashboardCard
-          title="Categories"
-          value={categoriesCount || 0}
-          icon="🗂️"
-          linkTo="/admin/categories"
-        />
+        <div className="p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
+          <Link href="/admin/categories">
+            <div className="flex justify-between items-center">
+              <div className="flex">
+                <div className="bg-red-600 w-10 h-10 min-w-10 rounded-md mr-3 flex items-center justify-center">
+                  <CategoryIcon width={16} className="stroke-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-normal text-red-900 tracking-wide">Categories</h2>
+                  <p className="text-2xl font-bold text-red-600 mt-1">{categoriesCount}</p>
+                </div>
+              </div>
+              <div className="size-7 rounded-md bg-gray-100 flex items-center justify-center">
+                <CircleRightIcon width={8} className="stroke-gray-800" />
+              </div>
+            </div>
+          </Link>
+        </div>
 
-        <DashboardCard
-          title="Brands"
-          value={brandsCount || 0}
-          icon="🏷️"
-          linkTo="/admin/brands"
-        />
+        <div className="p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
+          <Link href="/admin/brands">
+            <div className="flex justify-between items-center">
+              <div className="flex">
+                <div className="bg-yellow-600 w-10 h-10 min-w-10 rounded-md mr-3 flex items-center justify-center">
+                  <BrandIcon width={16} className="stroke-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-normal text-yellow-900 tracking-wide">Brands</h2>
+                  <p className="text-2xl font-bold text-yellow-600 mt-1">{brandsCount}</p>
+                </div>
+              </div>
+              <div className="size-7 rounded-md bg-gray-100 flex items-center justify-center">
+                <CircleRightIcon width={8} className="stroke-gray-800" />
+              </div>
+            </div>
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 mt-6">
@@ -94,57 +153,8 @@ const AdminHome = async () => {
           </table>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-          <div className="space-y-2">
-            <QuickActionLink href="/admin/products" text="Add New Product" />
-            <QuickActionLink href="/admin/categories" text="Manage Categories" />
-            <QuickActionLink href="/admin/brands" text="Manage Brands" />
-            <QuickActionLink href="/admin/trafficView/1" text="View Traffic Analytics" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Admin Help</h2>
-          <ul className="list-disc list-inside space-y-2 text-gray-600">
-            <li>Use the sidebar to navigate between different sections</li>
-            <li>You can add, edit, and delete products from the Products section</li>
-            <li>Manage your store categories and brands from their respective sections</li>
-            <li>View site traffic analytics in the Traffic View section</li>
-            <li>Your profile settings can be accessed from the top right menu</li>
-          </ul>
-        </div>
-      </div>
     </div>
   );
 };
-
-// Helper components
-const DashboardCard = ({ title, value, icon, linkTo }: { title: string, value: number, icon: string, linkTo: string }) => (
-  <Link href={linkTo} className="block">
-    <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-          <p className="text-3xl font-bold mt-1">{value}</p>
-        </div>
-        <div className="text-4xl">{icon}</div>
-      </div>
-    </div>
-  </Link>
-);
-
-const QuickActionLink = ({ href, text }: { href: string, text: string }) => (
-  <Link href={href}>
-    <div className="p-3 bg-gray-50 hover:bg-gray-100 rounded-md flex items-center">
-      <span className="text-sm font-medium">{text}</span>
-      <svg className="ml-auto w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-      </svg>
-    </div>
-  </Link>
-);
 
 export default AdminHome;
