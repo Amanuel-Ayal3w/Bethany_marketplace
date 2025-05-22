@@ -34,12 +34,12 @@ const ProductListItem = ({ data, requestReload }: TProps) => {
   };
 
   return (
-    <div className="w-full h-12 px-4 grid grid-cols-3 justify-between items-center text-sm text-gray-800 rounded-lg transition-colors duration-300 select-none hover:bg-gray-100">
-      <span className={"styles.name"}>{data.name}</span>
-      <span className={"styles.category"}>{data.category.name}</span>
-      <div className="flex gap-2 justify-end">
-        <Button onClick={handleEdit}>Edit</Button>
-        <Button onClick={() => setShowDelete(true)}>Delete</Button>
+    <div className="w-full py-4 px-4 md:px-6 mb-2 grid grid-cols-1 sm:grid-cols-3 gap-3 items-center bg-white border border-gray-200 rounded-lg shadow-sm transition-colors duration-300 hover:bg-gray-50">
+      <div className="font-medium text-gray-800 truncate">{data.name}</div>
+      <div className="text-gray-600 truncate">{data.category.name}</div>
+      <div className="flex gap-2 justify-start sm:justify-end">
+        <Button onClick={handleEdit} className="px-4 py-2">Edit</Button>
+        <Button onClick={() => setShowDelete(true)} className="px-4 py-2">Delete</Button>
       </div>
       {showDelete && (
         <Popup

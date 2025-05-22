@@ -1,15 +1,20 @@
 "use client";
 
 import StoreNavBar from "@/domains/store/shared/components/navbar";
+import dynamic from 'next/dynamic';
 
-import StoreFooter from "../../domains/store/shared/components/footer/index";
+// Import client-side footer wrapper instead of server component directly
+const ClientFooterWrapper = dynamic(
+  () => import('@/domains/store/shared/components/footer/ClientFooterWrapper'),
+  { ssr: false }
+);
 
 const StoreLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="bg-gray-50">
       <StoreNavBar />
       {children}
-      <StoreFooter />
+      <ClientFooterWrapper />
     </main>
   );
 };

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/shared/utils/styling";
-
+import SearchAutocomplete from "@/shared/components/UI/SearchAutocomplete";
 import AddVisit from "../addVisit";
 
 import NavBarProfile from "./navProfile";
@@ -49,17 +49,9 @@ const StoreNavBar = () => {
             </div>
           </Link>
           <div className="h-11 relative flex-1 mx-6 sm:mx-10">
-            <input
-              type="text"
-              className="text-gray-800 hidden sm:block pl-4 size-full border-gray-300 focus:border-gray-500 border rounded-lg outline-gray-500 sm:pl-12"
-              placeholder="Search"
-            />
-            <Image
-              src="/icons/searchIcon.svg"
-              width={16}
-              height={16}
-              alt="Search"
-              className="absolute top-3.5 left-5 hidden sm:block"
+            <SearchAutocomplete
+              placeholder="Search products, brands and more..."
+              className="hidden sm:block"
             />
           </div>
           <div className="text-gray-500 flex pr-2 md:pr-0">

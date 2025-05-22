@@ -61,59 +61,59 @@ const AdminHome = async () => {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Dashboard cards */}
-        <div className="p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
+        <div className="p-4 md:p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
           <Link href="/admin/products">
             <div className="flex justify-between items-center">
               <div className="flex">
-                <div className="bg-blue-600 w-10 h-10 min-w-10 rounded-md mr-3 flex items-center justify-center">
+                <div className="bg-blue-600 w-8 h-8 md:w-10 md:h-10 min-w-8 md:min-w-10 rounded-md mr-3 flex items-center justify-center">
                   <BagIcon width={16} className="stroke-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-normal text-blue-900 tracking-wide">Products</h2>
-                  <p className="text-2xl font-bold text-blue-600 mt-1">{productsCount}</p>
+                  <h2 className="text-lg md:text-xl font-normal text-blue-900 tracking-wide">Products</h2>
+                  <p className="text-xl md:text-2xl font-bold text-blue-600 mt-1">{productsCount}</p>
                 </div>
               </div>
-              <div className="size-7 rounded-md bg-gray-100 flex items-center justify-center">
+              <div className="size-6 md:size-7 rounded-md bg-gray-100 flex items-center justify-center">
                 <CircleRightIcon width={8} className="stroke-gray-800" />
               </div>
             </div>
           </Link>
         </div>
 
-        <div className="p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
+        <div className="p-4 md:p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
           <Link href="/admin/categories">
             <div className="flex justify-between items-center">
               <div className="flex">
-                <div className="bg-red-600 w-10 h-10 min-w-10 rounded-md mr-3 flex items-center justify-center">
+                <div className="bg-red-600 w-8 h-8 md:w-10 md:h-10 min-w-8 md:min-w-10 rounded-md mr-3 flex items-center justify-center">
                   <CategoryIcon width={16} className="stroke-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-normal text-red-900 tracking-wide">Categories</h2>
-                  <p className="text-2xl font-bold text-red-600 mt-1">{categoriesCount}</p>
+                  <h2 className="text-lg md:text-xl font-normal text-red-900 tracking-wide">Categories</h2>
+                  <p className="text-xl md:text-2xl font-bold text-red-600 mt-1">{categoriesCount}</p>
                 </div>
               </div>
-              <div className="size-7 rounded-md bg-gray-100 flex items-center justify-center">
+              <div className="size-6 md:size-7 rounded-md bg-gray-100 flex items-center justify-center">
                 <CircleRightIcon width={8} className="stroke-gray-800" />
               </div>
             </div>
           </Link>
         </div>
 
-        <div className="p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
+        <div className="p-4 md:p-6 bg-white rounded-xl border border-gray-200 transition-all duration-300 hover:border-gray-600 hover:shadow-md">
           <Link href="/admin/brands">
             <div className="flex justify-between items-center">
               <div className="flex">
-                <div className="bg-yellow-600 w-10 h-10 min-w-10 rounded-md mr-3 flex items-center justify-center">
+                <div className="bg-yellow-600 w-8 h-8 md:w-10 md:h-10 min-w-8 md:min-w-10 rounded-md mr-3 flex items-center justify-center">
                   <BrandIcon width={16} className="stroke-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-normal text-yellow-900 tracking-wide">Brands</h2>
-                  <p className="text-2xl font-bold text-yellow-600 mt-1">{brandsCount}</p>
+                  <h2 className="text-lg md:text-xl font-normal text-yellow-900 tracking-wide">Brands</h2>
+                  <p className="text-xl md:text-2xl font-bold text-yellow-600 mt-1">{brandsCount}</p>
                 </div>
               </div>
-              <div className="size-7 rounded-md bg-gray-100 flex items-center justify-center">
+              <div className="size-6 md:size-7 rounded-md bg-gray-100 flex items-center justify-center">
                 <CircleRightIcon width={8} className="stroke-gray-800" />
               </div>
             </div>
@@ -121,32 +121,32 @@ const AdminHome = async () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6 mt-6">
+      <div className="bg-white rounded-lg shadow p-4 md:p-6 mt-6">
         <h2 className="text-lg font-semibold mb-4">Recent Page Visits</h2>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto -mx-4 md:mx-0">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Page</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Page</th>
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                <th className="hidden sm:table-cell px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {recentVisits && recentVisits.length > 0 ? (
                 recentVisits.map((visit) => (
                   <tr key={visit.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{visit.pagePath || 'Unknown'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{visit.pageType}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(visit.time)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{visit.deviceResolution || 'Unknown'}</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-500 truncate max-w-[120px] sm:max-w-none">{visit.pagePath || 'Unknown'}</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-500">{visit.pageType}</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{formatDate(visit.time)}</td>
+                    <td className="hidden sm:table-cell px-4 md:px-6 py-4 text-sm text-gray-500">{visit.deviceResolution || 'Unknown'}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">No recent visits found</td>
+                  <td colSpan={4} className="px-4 md:px-6 py-4 text-center text-sm text-gray-500">No recent visits found</td>
                 </tr>
               )}
             </tbody>

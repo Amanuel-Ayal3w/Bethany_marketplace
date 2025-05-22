@@ -193,3 +193,13 @@ model ProductReview {
   product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
+
+// Model for site settings including contact information
+model SiteSettings {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

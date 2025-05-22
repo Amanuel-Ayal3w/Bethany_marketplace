@@ -5,17 +5,24 @@ import { uploadProductImage, deleteProductImage, getProductImages } from "@/acti
 import Image from "next/image";
 import Button from "@/shared/components/UI/button";
 import { useRouter } from "next/navigation";
+import AdminPagination from "@/domains/admin/components/pagination";
+
+const ITEMS_PER_PAGE = 12;
 
 export default function ImageManagementPage() {
     const [images, setImages] = useState<string[]>([]);
+    const [displayedImages, setDisplayedImages] = useState<string[]>([]);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [dragActive, setDragActive] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     // Load existing images on page load
     useEffect(() => {
         const loadImages = async () => {
+            setLoading(true);
             try {
                 const result = await getProductImages();
 
@@ -27,11 +34,20 @@ export default function ImageManagementPage() {
             } catch (err) {
                 console.error("Failed to load images", err);
                 setError("Failed to load images");
+            } finally {
+                setLoading(false);
             }
         };
 
         loadImages();
     }, []);
+
+    // Apply pagination when images or current page changes
+    useEffect(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        const endIndex = startIndex + ITEMS_PER_PAGE;
+        setDisplayedImages(images.slice(startIndex, endIndex));
+    }, [images, currentPage]);
 
     // Handle file drop events
     const handleDrag = (e: React.DragEvent) => {
@@ -81,6 +97,7 @@ export default function ImageManagementPage() {
                     setError(`Error uploading ${file.name}: ${result.error}`);
                 } else if (result.filePath) {
                     setImages(prev => [...prev, result.filePath]);
+                    setCurrentPage(1); // Go to first page after upload
                 }
             }
         } catch (err) {
@@ -107,9 +124,17 @@ export default function ImageManagementPage() {
         }
     };
 
+    const totalPages = Math.ceil(images.length / ITEMS_PER_PAGE);
+
+    const handlePageChange = (page: number) => {
+        if (page < 1 || page > totalPages) return;
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div className="flex items-center">
                     <h1 className="text-2xl font-bold mr-4">Image Management</h1>
                     <div className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-medium">
@@ -163,11 +188,17 @@ export default function ImageManagementPage() {
             <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-lg font-semibold mb-4">Uploaded Images</h2>
 
-                {images.length === 0 ? (
+                {loading ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {[...Array(8)].map((_, index) => (
+                            <div key={index} className="relative h-48 bg-gray-100 animate-pulse rounded-md"></div>
+                        ))}
+                    </div>
+                ) : images.length === 0 ? (
                     <p className="text-gray-500 text-center py-8">No images uploaded yet</p>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {images.map((img, index) => (
+                        {displayedImages.map((img, index) => (
                             <div key={index} className="relative group border rounded-md p-2 bg-gray-50">
                                 <div className="relative h-40 w-full mb-2">
                                     <Image
@@ -191,6 +222,14 @@ export default function ImageManagementPage() {
                         ))}
                     </div>
                 )}
+
+                {/* Pagination */}
+                <AdminPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    className="mt-6"
+                />
             </div>
         </div>
     );

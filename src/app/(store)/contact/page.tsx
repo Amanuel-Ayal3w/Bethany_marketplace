@@ -1,12 +1,18 @@
-import { Metadata } from "next";
-import Link from "next/link";
+'use client';  // Add this at the top to use client-side functionality
 
-export const metadata: Metadata = {
-    title: "Bethany Marketplace - Contact Us",
-    description: "Contact Bethany Marketplace for inquiries about our products"
-};
+import Link from "next/link";
+import { useState } from "react";
+
+// Temporary hardcoded phone number - would come from dashboard/settings in the full implementation
+const CONTACT_PHONE = "+49 30 575909881";
 
 export default function ContactPage() {
+    const [showPhone, setShowPhone] = useState(false);
+
+    const togglePhone = () => {
+        setShowPhone(!showPhone);
+    };
+
     return (
         <div className="w-full bg-white pt-40 pb-20">
             <div className="storeContainer max-w-4xl mx-auto">
@@ -17,7 +23,7 @@ export default function ContactPage() {
                         <div>
                             <h2 className="text-xl font-medium text-gray-700 mb-4">Get in Touch</h2>
                             <p className="text-gray-600 mb-6">
-                                We'd love to hear from you. Please fill out the form or contact us directly using the information below.
+                                We'd love to hear from you. Please contact us directly using the information below.
                             </p>
 
                             <div className="space-y-4">
@@ -28,7 +34,18 @@ export default function ContactPage() {
 
                                 <div>
                                     <h3 className="font-medium text-gray-800">Phone</h3>
-                                    <p className="text-gray-600">+49 30 575909881</p>
+                                    <div className="flex items-center gap-3">
+                                        {showPhone ? (
+                                            <p className="text-gray-600">{CONTACT_PHONE}</p>
+                                        ) : (
+                                            <button
+                                                onClick={togglePhone}
+                                                className="bg-bethany-blue-500 text-white py-2 px-4 rounded-md hover:bg-bethany-blue-600 transition-colors duration-300"
+                                            >
+                                                Show Phone Number
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div>
@@ -45,63 +62,30 @@ export default function ContactPage() {
                         </div>
 
                         <div>
-                            <h2 className="text-xl font-medium text-gray-700 mb-4">Send a Message</h2>
-                            <form className="space-y-4">
-                                <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Your Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-bethany-blue-500 focus:border-bethany-blue-500"
-                                        placeholder="Enter your name"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Email Address
-                                    </label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-bethany-blue-500 focus:border-bethany-blue-500"
-                                        placeholder="Enter your email"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Subject
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="subject"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-bethany-blue-500 focus:border-bethany-blue-500"
-                                        placeholder="Enter subject"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Message
-                                    </label>
-                                    <textarea
-                                        id="message"
-                                        rows={5}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-bethany-blue-500 focus:border-bethany-blue-500"
-                                        placeholder="Enter your message"
-                                    ></textarea>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="w-full bg-bethany-blue-500 text-white py-2 px-4 rounded-md hover:bg-bethany-blue-600 transition-colors duration-300"
-                                >
-                                    Send Message
-                                </button>
-                            </form>
+                            <h2 className="text-xl font-medium text-gray-700 mb-4">Call Us Now</h2>
+                            <p className="text-gray-600 mb-6">
+                                Click the button below to view our phone number. We're available during working hours to assist you with any questions.
+                            </p>
+                            <div className="flex items-center gap-3 mt-4">
+                                {showPhone ? (
+                                    <>
+                                        <p className="text-gray-800 font-medium">{CONTACT_PHONE}</p>
+                                        <button
+                                            onClick={togglePhone}
+                                            className="bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors duration-300"
+                                        >
+                                            Hide Number
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        onClick={togglePhone}
+                                        className="bg-bethany-blue-500 text-white py-2 px-4 rounded-md hover:bg-bethany-blue-600 transition-colors duration-300"
+                                    >
+                                        Show Phone Number
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
