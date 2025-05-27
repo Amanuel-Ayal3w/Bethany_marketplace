@@ -148,6 +148,10 @@ const AdminSidebar = () => {
             <Link className={linkClass("/admin/users")} href="/admin/users" onClick={() => isMobileView && setIsMobileMenuOpen(false)}>
               User Management
             </Link>
+
+            <Link className={linkClass("/admin/contact")} href="/admin/contact" onClick={() => isMobileView && setIsMobileMenuOpen(false)}>
+              Contact Settings
+            </Link>
           </div>
         </nav>
 

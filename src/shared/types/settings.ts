@@ -17,4 +17,19 @@ export interface FooterSettings {
 export interface SettingsResponse {
     settings?: FooterSettings;
     error?: string;
+}
+
+// Contact settings
+export interface ContactSettings {
+    address: string;
+    phone: string;
+    email: string;
+    workingHours: {
+        weekdays: string;
+        saturday: string;
+    };
+    mapLocation?: {
+        latitude: number;
+        longitude: number;
+    };
 } 
