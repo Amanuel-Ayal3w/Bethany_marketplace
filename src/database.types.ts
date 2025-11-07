@@ -23,16 +23,15 @@ export interface Database {
                     role?: string
                 }
             }
-            // Add other tables from your schema as needed
+            
         }
         Views: {
-            // Define views if you have any
-        }
+            
         Functions: {
-            // Define functions if you have any
+            
         }
         Enums: {
-            // Define enums if you have any
+            
         }
     }
     auth: {
@@ -46,4 +45,5 @@ export interface Database {
             }
         }
     }
+}
 } 
