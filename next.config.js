@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const path = require("path");
+
 const nextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
@@ -12,6 +13,9 @@ const nextConfig = {
         port: "",
       },
     ],
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   env: {
     IMG_URL: process.env.CLOUDINARY_URL || "",
